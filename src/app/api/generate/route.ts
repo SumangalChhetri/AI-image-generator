@@ -8,7 +8,9 @@ export async function POST(req: Request) {
   }
 
   try {
-    const response = await fetch('https://image.pollinations.ai/prompt/' + encodeURIComponent(prompt));
+    const response = await fetch(
+      'https://image.pollinations.ai/prompt/' + encodeURIComponent(prompt)
+    );
 
     if (!response.ok) {
       throw new Error('Image generation failed');
@@ -17,8 +19,11 @@ export async function POST(req: Request) {
     const imageUrl = response.url;
 
     return NextResponse.json({ imageUrl });
-  } catch (error: any) {
-    console.error('Pollinations error:', error);
-    return NextResponse.json({ error: 'Image generation failed.' }, { status: 500 });
+  } catch (error: unknown) {
+    const message =
+      error instanceof Error ? error.message : 'Image generation failed.';
+    console.error('Pollinations error:', message);
+
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }
