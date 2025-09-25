@@ -26,5 +26,6 @@ jobs:
             git pull origin main &&
             npm ci &&
             npm run build &&
-            pm2 reload ai-image-generator --update-env || pm2 start npm --name 'ai-image-generator' -- start
+            pm2 reload ai-image-generator --update-env || pm2 start npm --name 'ai-image-generator' -- start &&
+            pm2 save
           "
