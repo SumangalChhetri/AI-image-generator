@@ -8,30 +8,21 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
     steps:
-      # 1️⃣ Checkout repository
-      - name: Checkout repository
+      - name: Checkout repo
         uses: actions/checkout@v4
 
-      # 2️⃣ Setup SSH key
       - name: Setup SSH
         uses: webfactory/ssh-agent@v0.8.0
         with:
           ssh-private-key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
 
-      # 3️⃣ Deploy to EC2
       - name: Deploy to EC2
         run: |
           ssh -o StrictHostKeyChecking=no -p ${{ secrets.EC2_PORT }} ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} "
-            # Load NVM
-            export NVM_DIR=\"$HOME/.nvm\"
-            [ -s \"$NVM_DIR/nvm.sh\" ] && \. \"$NVM_DIR/nvm.sh\"
-
-            # Go to deploy path
             cd ${{ secrets.DEPLOY_PATH }}
 
-            # Fix Git ownership issue
+            # Ensure git directory is safe
             git config --global --add safe.directory ${{ secrets.DEPLOY_PATH }}
 
             # Pull latest changes
@@ -42,7 +33,7 @@ jobs:
             npm ci
             npm run build
 
-            # Restart app with PM2
-            pm2 delete ai-image-generator || true
-            pm2 start npm --name 'ai-image-generator' -- start
+            # Use full path for PM2
+            ~/.nvm/versions/node/$(node -v)/bin/pm2 reload ai-image-generator --update-env || \
+            ~/.nvm/versions/node/$(node -v)/bin/pm2 start npm --name 'ai-image-generator' -- start --cwd ${{ secrets.DEPLOY_PATH }}
           "
