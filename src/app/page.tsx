@@ -55,14 +55,14 @@ export default function Home() {
     <main className="flex min-h-screen flex-col items-center justify-center px-6 py-12 bg-gradient-to-br from-black via-gray-900 to-gray-950 text-white">
       <div className="w-full max-w-2xl bg-gray-900 p-10 rounded-3xl shadow-2xl border border-gray-700 text-center">
         <h1 className="text-5xl font-extrabold mb-6 text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 drop-shadow-lg">
-          ✨ AI Image lll Generator🚀
+          ✨ AI Image ldasasll Generator🚀
         </h1>
 
         <input
           type="text"
           value={prompt}
           onChange={(e) => setPrompt(e.target.value)}
-          placeholder="Describe your hero imagination..."
+          placeholder=" hero imagination..."
           className="w-full p-4 text-lg rounded-xl bg-gray-800 text-white placeholder-gray-400 border border-gray-700 mb-4 focus:outline-none focus:ring-2 focus:ring-purple-500"
         />
 
