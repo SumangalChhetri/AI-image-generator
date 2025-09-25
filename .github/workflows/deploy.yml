@@ -10,11 +10,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code using SSH
+      - name: Checkout code
         uses: actions/checkout@v4
         with:
-          repository: ${{ github.repository }}
-          ssh-key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
+          # Use HTTPS; personal access token will allow access to private repo
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Deploy to EC2
         run: |
