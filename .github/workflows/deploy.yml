@@ -10,20 +10,25 @@ jobs:
     runs-on: windows-latest
 
     steps:
+      # Step 1: Checkout code
       - name: Checkout
         uses: actions/checkout@v4
 
+      # Step 2: Setup Node.js
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '20'  
+          node-version: '20'  # Use your project’s Node version
 
+      # Step 3: Install dependencies
       - name: Install dependencies
         run: npm install
 
+      # Step 4: Build project
       - name: Build project
         run: npm run build
 
+      # Step 5: Start app in background and log output
       - name: Start app
-        run: |
-          start /B npm start > app.log 2>&1
+        shell: cmd
+        run: start /B npm start > app.log 2>&1
