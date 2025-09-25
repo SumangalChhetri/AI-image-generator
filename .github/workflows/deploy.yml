@@ -1,4 +1,4 @@
-name: Simple Deploy to EC2
+name: Local Deploy on Windows
 
 on:
   push:
@@ -6,28 +6,24 @@ on:
       - main
 
 jobs:
-  deploy:
-    runs-on: ubuntu-latest
+  deploy-local-windows:
+    runs-on: windows-latest
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup SSH
-        uses: webfactory/ssh-agent@v0.8.1
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
         with:
-          ssh-private-key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
+          node-version: '20'  # use your project’s Node version
 
-      - name: Rsync repo to EC2
-        run: |
-          rsync -avz --delete -e "ssh -o StrictHostKeyChecking=no -p ${{ secrets.EC2_PORT }}" ./ \
-          ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}:${{ secrets.DEPLOY_PATH }}
+      - name: Install dependencies
+        run: npm install
 
-      - name: Run deploy commands on EC2
+      - name: Build project
+        run: npm run build
+
+      - name: Start app
         run: |
-          ssh -o StrictHostKeyChecking=no -p ${{ secrets.EC2_PORT }} \
-          ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} "
-            cd ${{ secrets.DEPLOY_PATH }} &&
-            npm install &&
-            npm run build &&
-            nohup npm start > app.log 2>&1 &
-          "
+          start /B npm start > app.log 2>&1
