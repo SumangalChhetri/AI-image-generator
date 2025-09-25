@@ -10,13 +10,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: Checkout code using SSH
         uses: actions/checkout@v4
-
-      - name: Setup SSH
-        uses: webfactory/ssh-agent@v0.8.3
         with:
-          ssh-private-key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
+          repository: ${{ github.repository }}
+          ssh-key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
 
       - name: Deploy to EC2
         run: |
