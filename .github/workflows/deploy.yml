@@ -10,23 +10,25 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # Step 1: Checkout code
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      # Step 2: Setup SSH
       - name: Setup SSH
         uses: webfactory/ssh-agent@v0.8.0
         with:
           ssh-private-key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
 
+      # Step 3: Deploy to EC2
       - name: Deploy to EC2
         run: |
           ssh -o StrictHostKeyChecking=no -p ${{ secrets.EC2_PORT }} ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} "
             cd ${{ secrets.DEPLOY_PATH }} &&
             git reset --hard &&
             git pull origin main &&
-            npm ci &&
-            npm run build &&
-            pm2 delete ai-image-generator || true &&
-            pm2 start npm --name 'ai-image-generator' -- start &&
-            pm2 save
+            /root/.nvm/versions/node/v20.19.5/bin/npm ci &&
+            /root/.nvm/versions/node/v20.19.5/bin/npm run build &&
+            /root/.nvm/versions/node/v20.19.5/lib/node_modules/pm2/bin/pm2 delete ai-image-generator || true &&
+            /root/.nvm/versions/node/v20.19.5/lib/node_modules/pm2/bin/pm2 start npm --name 'ai-image-generator' -- start
           "
